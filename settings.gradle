@@ -1,0 +1,3 @@
+include ':aspect:aspectapp', ':aspect:library', ':aspect:framework'
+include ':javassist:javassistapp',':javassist:plugin'
+include ':asm:asmapp',':asm:asmplugin',':asm:asmlibrary'

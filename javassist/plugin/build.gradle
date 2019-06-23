@@ -1,0 +1,21 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+dependencies {
+    compile gradleApi() //gradle sdk
+    compile localGroovy() //groovy sdk
+    compile 'com.android.tools.build:gradle:3.4.1'
+    compile 'org.javassist:javassist:3.20.0-GA'
+}
+repositories {
+    jcenter()
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: uri('../../repo')) //仓库的路径
+        pom.groupId = 'com.wyh.plugin'  //groupId ，自行定义，一般是包名
+        pom.artifactId = 'ssist' //artifactId ，自行定义
+        pom.version = '1.0.0' //version 版本号
+    }
+}

@@ -1,0 +1,30 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools.build:gradle:3.1.4'
+    implementation 'com.android.tools.build:gradle-api:3.1.4'
+    //noinspection GradleDependency
+    implementation 'org.ow2.asm:asm:5.1'
+    //noinspection GradleDependency
+    implementation 'org.ow2.asm:asm-util:5.1'
+    //noinspection GradleDependency
+    implementation 'org.ow2.asm:asm-commons:5.1'
+    implementation 'com.quinn.hunter:hunter-transform:0.9.0'
+}
+
+repositories {
+    google()
+    jcenter()
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: uri('../../repo')) //仓库的路径
+        pom.groupId = 'com.wyh.plugin'  //groupId ，自行定义，一般是包名
+        pom.artifactId = 'asmplugin' //artifactId ，自行定义
+        pom.version = '1.0.0' //version 版本号
+    }
+}
