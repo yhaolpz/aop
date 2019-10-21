@@ -28,7 +28,7 @@ class MyPlugin extends Transform implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        println "this is my custom plugin"
+        println "wyh--- apply plugin"
         isLibrary = project.plugins.hasPlugin(LibraryPlugin)
         this.project = project
         def android
@@ -42,16 +42,23 @@ class MyPlugin extends Transform implements Plugin<Project> {
 
     @Override
     String getName() {
+        //用来定义transform任务的名称
         return "ssist"
     }
 
     @Override
     Set<QualifiedContent.ContentType> getInputTypes() {
+        //用来限定这个transform能处理的文件类型，一般来说我们要处理的都是class文件，
+        // 就返回TransformManager.CONTENT_CLASS,当然如果你是想要处理资源文件，
+        // 可以使用TransformManager.CONTENT_RESOURCES
         return TransformManager.CONTENT_CLASS
     }
 
     @Override
     Set getScopes() {
+        //要处理那种文件，那么，这里我们要指定的的就是哪些文件了。比如说我们如果想处理class文件，
+        // 但class文件可以是当前module的，也可以是子module的，
+        // 还可以是第三方jar包中的，这里就是用来指定这个的
         if (isLibrary) {
             return TransformManager.PROJECT_ONLY
         }
@@ -60,6 +67,7 @@ class MyPlugin extends Transform implements Plugin<Project> {
 
     @Override
     boolean isIncremental() {
+        //是否支持增量编译
         return false
     }
 
@@ -67,6 +75,7 @@ class MyPlugin extends Transform implements Plugin<Project> {
     void transform(TransformInvocation transformInvocation) throws TransformException,
             InterruptedException, IOException {
         super.transform(transformInvocation)
+        println "wyh---plugin transform "
         project.android.bootClasspath.each {
             pool.appendClassPath(it.absolutePath)
         }
@@ -75,6 +84,7 @@ class MyPlugin extends Transform implements Plugin<Project> {
                 pool.insertClassPath(it.file.absolutePath)
                 // 重命名输出文件（同目录copyFile会冲突）
                 def jarName = it.name
+                println "jarName"+jarName
                 def md5Name = DigestUtils.md5Hex(it.file.getAbsolutePath())
                 if (jarName.endsWith(".jar")) {
                     jarName = jarName.substring(0, jarName.length() - 4)
@@ -85,6 +95,7 @@ class MyPlugin extends Transform implements Plugin<Project> {
             }
             it.directoryInputs.each {
                 def preFileName = it.file.absolutePath
+                println "preFileName"+preFileName
                 pool.insertClassPath(preFileName)
                 findTarget(it.file, preFileName)
                 // 获取output目录
